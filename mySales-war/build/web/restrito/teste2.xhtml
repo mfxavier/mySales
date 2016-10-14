@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"	
+        xmlns:b="http://bootsfaces.net/ui"
+        xmlns:p="http://primefaces.org/ui">
+    <ui:composition template="/templates/interna.xhtml">
+        <ui:define name="titulo">
+            TESTE 22 
+	</ui:define>       
+	<ui:define name="corpo">
+            <h:form id="listagemFormTeste">
+               <b:container>
+                <b:row styleClass="show-grid">
+                       <b:column col-xs="12" >
+                            <h3 class="fontResponsive" >Movimentações de vendedores por grupos de produtos</h3> 
+                             <p:dataTable var="dtListaMovDeGrupoDeProdutos" 
+                                           widgetVar="wvListaMovDeGrupoDeProdutos"
+                                           filteredValue="#{consolidadorDeVendasMB.filteredConsolidadorDeVendas}"
+                                           value="#{consolidadorDeVendasMB.listaDeVendedores}"
+                                           paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {CurrentPageReport}"  
+                                           rowsPerPageTemplate="25,50,75,100,200,300"
+                                           emptyMessage="Nenhum Registro Encontrado"
+                                           currentPageReportTemplate="(Pag. {currentPage}/{totalPages} - {totalRecords} registros)"
+                                           paginator="true"
+                                           rows="50"
+                                           style="margin-top: 10px; width: 100%"
+                                           paginatorPosition="top"
+                                           filterDelay="100"
+                                           draggableColumns="false" 
+                                           resizableColumns="true"
+                                           sortBy="#{dtListaMovDeGrupoDeProdutos.vendedorApelido}"
+                                           stickyHeader="false" 
+                                           reflow="true"
+                                           id="dtListaMovDeGrupoDeProdutosID">
+                                 <p:columnGroup type="header">
+                                    <p:row>
+                                        <p:column rowspan="2" headerText="Vendedores" />
+                                        <p:column colspan="2" headerText="Quantidades" />
+                                    </p:row>
+                                    <p:row>
+                                        <p:column headerText="Liquida" />
+                                        <p:column headerText="Troca" />
+                                    </p:row>
+                                </p:columnGroup>
+
+                                 <p:column style="width:30px" class="iconTogglerDisplayVisibled">
+                                         <p:rowToggler class="iconTogglerDisplayVisibled"/>
+                                 </p:column>
+
+                                 <p:column headerText="Vendedor" 
+                                           sortBy="#{dtListaMovDeGrupoDeProdutos.vendedorApelido}"
+                                           filterBy="#{dtListaMovDeGrupoDeProdutos.vendedorApelido}" 
+                                           filterStyleClass="headerColunaDataTable"
+                                           filterFunction="#{consolidadorDeVendasMB.filterByName}"
+                                           rowspan="4"
+                                           style="text-align: right; width: 100%; font-size: 12px">
+
+
+                                     <p:outputLabel value="#{dtListaMovDeGrupoDeProdutos.vendedorApelido} (#{dtListaMovDeGrupoDeProdutos.vendedor})" 
+                                                 style="text-align: left; width: 50%; display: block;" />
+
+                                     <h:outputText value="LOJA: #{dtListaMovDeGrupoDeProdutos.filial}" 
+                                                 style="text-align: left; display: block; font-size: 9px" />
+
+
+
+                                 </p:column>
+                                 
+                                 <p:subTable var="vendas" value="#{consolidadorDeVendasMB.obterTotaisSubGrupoProduto(dtListaMovDeGrupoDeProdutos.filial,
+                                                                                                                    dtListaMovDeGrupoDeProdutos.vendedorApelido)}">
+                                        <f:facet name="header">
+                                          <h:outputText value="#{dtListaMovDeGrupoDeProdutos.vendedorApelido}" />
+                                        </f:facet>
+                                     
+                                     <p:column>
+                                         <h:outputText value="#{vendas.qtdeLiquida}" />
+                                     </p:column>
+                                     
+                                     <p:column>
+                                         <h:outputText value="#{vendas.qtde_venda}" />
+                                     </p:column>
+                                     <p:column>
+                                         <h:outputText value="#{vendas.qtdeTroca}" />
+                                     </p:column>
+                                 </p:subTable>
+                                 
+                                 
+                                 
+                                 <!--
+                                 <p:column headerText="Grupo" sortBy="#{dtListaMovDeGrupoDeProdutos.grupo_produto}"
+                                             filterBy="#{dtListaMovDeGrupoDeProdutos.grupo_produto}"  class="colunaVisibilidade"
+                                             filterStyleClass="headerColunaDataTable"
+                                             filterFunction="#{consolidadorDeVendasMB.filterByName}"
+                                             style="text-align: right; width: 30%;font-size: 12px;">
+                                           <h:outputText value="#{dtListaMovDeGrupoDeProdutos.grupo_produto}" 
+                                                         style="text-align: right; display: block">
+
+                                           </h:outputText>
+                                   </p:column>
+
+                                 <p:column headerText="Qtde Liquida" sortBy="#{dtListaMovDeGrupoDeProdutos.qtdeLiquida}"
+                                                 filterBy="#{dtListaMovDeGrupoDeProdutos.qtdeLiquida}" class="colunaVisibilidade"
+                                                 filterStyleClass="headerColunaDataTable"
+                                                 style="text-align: right;width: 30%; font-size: 12px;">
+                                       <h:outputText value="#{dtListaMovDeGrupoDeProdutos.qtdeLiquida}" style="text-align: center; display: block;" >
+                                       </h:outputText>
+                                   </p:column>
+
+                                 <p:column headerText="Qtde Vendida" sortBy="#{dtListaMovDeGrupoDeProdutos.qtde_venda}"
+                                                 filterBy="#{dtListaMovDeGrupoDeProdutos.qtde_venda}" class="colunaVisibilidade"
+                                                 filterStyleClass="headerColunaDataTable"
+                                                 style="text-align: right;width: 30%;font-size: 12px ">
+                                       <h:outputText value="#{dtListaMovDeGrupoDeProdutos.qtde_venda}" style="text-align: center; display: block;" >
+                                       </h:outputText>
+                                   </p:column>
+
+                                 <p:column headerText="Qtde Troca" sortBy="#{dtListaMovDeGrupoDeProdutos.qtdeTroca}"
+                                             filterBy="#{dtListaMovDeGrupoDeProdutos.qtdeTroca}" class="colunaVisibilidade"
+                                             filterStyleClass="headerColunaDataTable"
+                                             style="text-align: right;width: 30%;font-size: 12px">
+                                       <h:outputText value="#{dtListaMovDeGrupoDeProdutos.qtdeTroca}" style="text-align: center; display: block;" >
+                                       </h:outputText>
+                                   </p:column>
+
+
+                                 <p:column headerText="Valor Líquido" sortBy="#{dtListaMovDeGrupoDeProdutos.valorLiquidoVenda}"
+                                             filterBy="#{dtListaMovDeGrupoDeProdutos.valorLiquidoVenda}" class="colunaVisibilidade"
+                                             filterStyleClass="headerColunaDataTable"
+                                             style="text-align: right;width: 30%;font-size: 12px">
+                                           <h:outputText value="#{dtListaMovDeGrupoDeProdutos.valorLiquidoVenda}" style="text-align: right; display: block;" >
+                                                <f:convertNumber groupingUsed="true" minFractionDigits="2" maxFractionDigits="2"/>
+                                           </h:outputText>
+                               </p:column>
+
+                                 <p:column headerText="Venda Bruta" sortBy="#{dtListaMovDeGrupoDeProdutos.valor_venda}"
+                                             filterBy="#{dtListaMovDeGrupoDeProdutos.valor_venda}" class="colunaVisibilidade"
+                                             filterStyleClass="headerColunaDataTable"
+                                             style="text-align: right;width: 30%;font-size: 12px">
+                                           <h:outputText value="#{dtListaMovDeGrupoDeProdutos.valor_venda}" style="text-align: right; display: block;" >
+                                                <f:convertNumber groupingUsed="true" minFractionDigits="2" maxFractionDigits="2"/>
+                                           </h:outputText>
+                               </p:column>
+
+                                 <p:column headerText="Valor Troca" sortBy="#{dtListaMovDeGrupoDeProdutos.valorTroca}"
+                                             filterBy="#{dtListaMovDeGrupoDeProdutos.valorTroca}" class="colunaVisibilidade"
+                                             filterStyleClass="headerColunaDataTable"
+                                             style="text-align: right;width: 30%;font-size: 12px">
+                                       <h:outputText value="#{dtListaMovDeGrupoDeProdutos.valorTroca}" style="text-align: right; display: block;" >
+                                                <f:convertNumber groupingUsed="true" minFractionDigits="2" maxFractionDigits="2"/>
+                                       </h:outputText>
+                                 </p:column>
+
+                               <p:rowExpansion class="iconTogglerDisplayVisibled">
+                                 <p:panelGrid  
+                                     columns="2" 
+                                     columnClasses="columnDataList2,columnDataList3"  
+                                     class="table table-striped table-bordered">
+
+                                     <p:outputLabel value="Grupo" style="text-align: right; display: block;" />
+                                     <p:outputLabel value="#{dtListaMovDeGrupoDeProdutos.grupo_produto}" />
+
+
+                                     <p:outputLabel value="Qtde Liquida" style="text-align: right; display: block;" />
+                                     <p:outputLabel value="#{dtListaMovDeGrupoDeProdutos.qtdeLiquida}" />
+
+
+
+                                 </p:panelGrid>    
+                               </p:rowExpansion>
+                               <p:summaryRow>
+                                   <p:column colspan="2" style="text-align:left" class="iconTogglerDisplayVisibled">
+                                       <h:outputText value="Total de Vendas da #{dtListaMovDeGrupoDeProdutos.vendedorApelido}" style="size: 14px"/>
+
+
+                                    </p:column>
+
+                                   <p:column colspan="2" style="text-align:right" class="colunaVisibilidade">
+                                       <h:outputText value="Total:" styleClass="fontAllTextRight"/>
+                                   </p:column>
+
+                                   <p:column class="colunaVisibilidade">
+                                       <h:outputText value="#{consolidadorDeVendasMB.getTotalQtdeLiquida(filterEvent, dtListaMovDeGrupoDeProdutos.vendedorApelido)}" styleClass="fontAllSubtotalQtde"/>
+                                   </p:column>
+
+                                   <p:column class="colunaVisibilidade">
+                                       <h:outputText value="#{consolidadorDeVendasMB.getTotalQtdeVendida(filterEvent, dtListaMovDeGrupoDeProdutos.vendedorApelido)}" styleClass="fontAllSubtotalQtde"/>
+                                   </p:column>
+
+                                   <p:column class="colunaVisibilidade">
+                                       <h:outputText value="#{consolidadorDeVendasMB.getTotalQtdeTroca(filterEvent, dtListaMovDeGrupoDeProdutos.vendedorApelido)}" styleClass="fontAllSubtotalQtde"/>
+                                   </p:column>    
+                                   <p:column class="colunaVisibilidade">
+                                       <h:outputText value="#{consolidadorDeVendasMB.getTotalValorLiquido(filterEvent, dtListaMovDeGrupoDeProdutos.vendedor)}" styleClass="fontAllSubtotalValor">
+                                           <f:convertNumber groupingUsed="true" minFractionDigits="2" maxFractionDigits="2"/>
+                                       </h:outputText>
+                                   </p:column>    
+                                   <p:column class="colunaVisibilidade">
+                                       <h:outputText value="#{consolidadorDeVendasMB.getTotalValorVendas(filterEvent, dtListaMovDeGrupoDeProdutos.vendedor)}" styleClass="fontAllSubtotalValor">
+                                           <f:convertNumber groupingUsed="true" minFractionDigits="2" maxFractionDigits="2"/>
+                                       </h:outputText>
+                                   </p:column>   
+                                   <p:column class="colunaVisibilidade">
+                                       <h:outputText value="#{consolidadorDeVendasMB.getTotalValorTrocas(filterEvent, dtListaMovDeGrupoDeProdutos.vendedor)}" styleClass="fontAllSubtotalValor">
+                                           <f:convertNumber groupingUsed="true" minFractionDigits="2" maxFractionDigits="2"/>
+                                       </h:outputText>
+                                   </p:column>
+                                
+                               </p:summaryRow>
+
+                             <p:columnGroup  type="footer">
+                                 <p:row>
+                                     <p:column footerText="Total Geral:" colspan="2" style="font-family: 'Metrophobic', sans-serif; font-size: 10px;color:  #000; text-align: right;font-weight: 400;"/>
+                                     <p:column footerText="#{consolidadorDeVendasMB.totalGeralQtdeLiquida}" styleClass="fontAllTotalGeralQtde" />
+                                     <p:column footerText="#{consolidadorDeVendasMB.totalGeralQtdeVendida}" styleClass="fontAllTotalGeralQtde"/>
+                                     <p:column footerText="#{consolidadorDeVendasMB.totalGeralQtdeTroca}" styleClass="fontAllTotalGeralQtde"/>
+                                     <p:column footerText="#{consolidadorDeVendasMB.totalGeralValorLiquido}" style="font-family: 'Metrophobic', sans-serif; font-size: 10px;color:  #000; text-align: right;font-weight: 400;" />
+                                     <p:column footerText="#{consolidadorDeVendasMB.totalGeralValorVendas}" style="font-family: 'Metrophobic', sans-serif; font-size: 10px;color:  #000; text-align: right;font-weight: 400;"/>
+                                     <p:column footerText="#{consolidadorDeVendasMB.totalGeralValorTrocas}" style="font-family: 'Metrophobic', sans-serif; font-size: 10px;color:  #000; text-align: right;font-weight: 400;"/>
+                                 </p:row>
+                             </p:columnGroup> 
+                                --> 
+
+                           </p:dataTable>
+                       </b:column>
+                    </b:row>
+               </b:container>    
+            </h:form>
+	</ui:define>
+       
+</ui:composition>
+</html>

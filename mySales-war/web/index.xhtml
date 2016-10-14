@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Andarella</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <script type="text/javascript">
+           jQuery(window).load(function () {
+                $(".loader").fadeOut("slow"); //retire o delay quando for copiar!
+                $("#tudo_page").toggle("fast");
+          });
+        </script>
+        
+        <style>
+           #carregando {
+            position: fixed;
+            left: 0px;
+            top: 0px;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            background: url('http://i.imgur.com/zAD2y29.gif') 50% 50% no-repeat white;
+         }
+         #site { 
+             display:none; 
+         }
+        </style>
+        
+    </head>
+    <body>
+        <div id="carregando"></div>
+        <div id="site">
+            <META HTTP-EQUIV="Refresh" CONTENT="0;URL=faces/restrito/home.xhtml"/>
+        </div>
+        
+    </body>
+</html>
+

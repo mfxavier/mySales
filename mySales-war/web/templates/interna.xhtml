@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:h="http://java.sun.com/jsf/html"
+          xmlns:ui="http://java.sun.com/jsf/facelets"
+          xmlns:f="http://xmlns.jcp.org/jsf/core"> <!-- (1) -->
+<h:head>
+     <meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta http-equiv="X-UA-Conpatible" content="IE=edge" />
+        <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'/>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+        <h:outputStylesheet library="css" name="estilo.css"/> 
+        <h:outputStylesheet library="css" name="bootstrap.min.css"></h:outputStylesheet>
+       <style type="text/css"><!--
+	#logotipo {
+		text-align: center; 
+		float: center;
+	} -->
+        
+    </style>
+</h:head>
+<h:body> 
+        <div id="container">
+            
+                <div id="boasVindas" >
+                    
+                    
+                    
+		</div> 
+            
+                <div id="logotipo">
+                    <h:graphicImage library="imagens" name="andarella_logo.png" class="img-circle" url="/faces/restrito/home.xhtml" />
+		</div>
+            
+		
+            
+		<div id="corpo">
+			<ui:insert name="corpo"/>
+                        
+		</div>
+             
+		<div id="rodape">
+	    	<ui:insert name="rodape">
+                   <!--
+	    		<ui:include src="/publico/rodape.xhtml"/>
+              -->     
+	    	</ui:insert> 
+              
+		</div>
+	</div> 
+        
+       
+</h:body>
+</html>

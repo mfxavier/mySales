@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"	
+        xmlns:b="http://bootsfaces.net/ui"
+	 xmlns:p="http://primefaces.org/ui">
+    <ui:composition template="/templates/interna.xhtml">
+        <ui:define name="titulo">
+            Testes 
+	</ui:define>       
+	<ui:define name="corpo">
+            <h:form id="listagemFormTeste">
+               <b:jumbotron>
+                   <b:container>
+                    <p:messages id="messages" autoUpdate="true" closable="true" />
+                      <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+                        <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                           <p:graphicImage library = "imagens" name="loader_win10.gif" width="40px" height="40px" style="margin-left: 25%;margin-right: 25%;margin-bottom: 10%"/>
+                           <br/>
+                            <h:outputText value="Processando..." style="text-align: center; display: block; font-size: 12px;"/>
+                        </p:dialog>
+                        <h2 class="fontResponsive" style="margin-top: 10px">Meus Testes</h2>
+                        
+                        <b:row>
+                       
+                        <b:column span="3" >
+                            <p:spacer width="1px" />
+                            <b:selectMultiMenu value="#{consolidadorDeVendasMB.consolidadorDeVendas.filial}" 
+                                                id="filialID"  
+                                                tooltip="Informe nesse campo a filial que deseja visualizar a venda"
+                                                includeSelectAllOption="true"
+                                                selectAllText="Marcar/Desmarcar Todos"
+                                                nSelectedText="selecionado(s)" 
+                                                numberDisplayed="2"
+                                                nonSelectedText="Selecione uma ou várias filiais"
+                                                allSelectedText="Filiais selecionados"
+                                                placeholder="Selecione uma ou várias filiais">
+                                 <f:selectItems value="#{filiaisMB.obterListaDeFiliais()}" var="filiaisCombo" 
+                                                                 itemLabel="#{filiaisCombo.filial}"
+                                                                 itemValue="'#{filiaisCombo.filial}'"/>
+
+                            </b:selectMultiMenu>
+                        </b:column>
+                        <b:column span="3"> 
+                                <div class="wrapper iphone"><p:spacer width="1px"/></div>
+                                <b:datepicker placeholder="Data Inicial" 
+                                              value="#{consolidadorDeVendasMB.consolidadorDeVendas.dataVendaIni}" 
+                                              mode="popup-icon" 
+                                              tooltip="Informe nesse campo a data inicial de venda">
+
+                                </b:datepicker>
+                        </b:column>
+                        
+                           
+
+                        <b:column span="3" > 
+                            <div class="wrapper iphone"><p:spacer width="1px"/></div>
+                            <b:datepicker placeholder="Data Final"  
+                                          value="#{consolidadorDeVendasMB.consolidadorDeVendas.dataVendaFim}"
+                                          mode="popup-icon" 
+                                          tooltip="Informe nesse campo a data final de venda">
+
+                             </b:datepicker>
+                        </b:column>
+                        
+                         <b:column span="3"> 
+                            <div class="wrapper iphone"><p:spacer width="1px"/></div>
+                            
+                                   <b:commandButton value="Consultar Vendas" 
+                                             look="success" 
+                                             style="text-align: right; display: block;"  onclick="PF('statusDialog').show()" 
+                                             tooltip="Clique aqui para consultar as vendas do período específico"
+                                             ajax="true"
+                                             update="myTesteTableId" 
+                                             id="btnConcultarVendas"
+                                             action="#{consolidadorDeVendasMB.buscarVendasPorFiliaisPeriodo()}">
+                                    
+                            </b:commandButton> 
+                            
+                            
+                           
+                                                  
+                        </b:column>
+                    </b:row>
+                        
+                            
+                         
+                            <h2 class="fontResponsive" style="margin-top: 10px">Movimentações de vendedores</h2>
+                            <p:dataTable var="myTest" 
+                                                widgetVar="myTesteTable" onExpandStart="PF('statusDialog').show()"
+                                                value="#{consolidadorDeVendasMB.myQuery}" 
+                                                filteredValue="#{consolidadorDeVendasMB.filteredConsolidadorDeVendas}"
+                                                emptyMessage="Nenhum Registro Encontrado"
+                                                tableStyleClass="table table-striped table-bordered"
+                                                style="width: 100%" 
+                                                filterDelay="1000"
+                                                draggableColumns="false" 
+                                                resizableColumns="false"
+                                                sortBy="#{myTest.filial}"
+                                                id="myTesteTableId">
+
+
+
+                                       <p:column style="width:30px" class="iconTogglerDisplayVisibled">
+                                           <p:rowToggler class="iconTogglerDisplayVisibled"/>
+                                       </p:column>
+
+                                        <p:column headerText="Filial" style="width: 50%" sortBy="#{myTest.filial}">
+                                           <h:outputText value="#{myTest.filial}" />
+                                       </p:column>
+
+                                        <p:column headerText="Vendedor" style="width: 50%" sortBy="#{myTest.vendedorApelido}">
+                                           <h:outputText value="#{myTest.vendedorApelido}" />
+                                       </p:column>
+
+                                        <p:column headerText="Valor Vendas" sortBy="#{myTest.valorLiquidoVenda}"
+                                                        filterBy="#{myTest.valorLiquidoVenda}" class="colunaVisibilidade"
+                                                        filterStyleClass="headerColunaDataTable"
+                                                        style="width: 12%;text-align: right;font-size: 10px">
+                                                      <h:outputText value="#{myTest.valorLiquidoVenda}" style="text-align: right; display: block;" >
+                                                           <f:convertNumber groupingUsed="true" minFractionDigits="2" maxFractionDigits="2"/>
+                                                      </h:outputText>
+                                       </p:column>
+
+                                        <p:column headerText="Valor Metas" sortBy="#{myTest.valorMeta}"
+                                                        filterBy="#{myTest.valorMeta}" class="colunaVisibilidade"
+                                                        filterStyleClass="headerColunaDataTable"
+                                                        style="width: 12%;text-align: right;font-size: 10px">
+                                                      <h:outputText value="#{myTest.valorMeta}" style="text-align: right; display: block;" >
+                                                           <f:convertNumber groupingUsed="true" minFractionDigits="2" maxFractionDigits="2"/>
+                                                      </h:outputText>
+                                       </p:column>
+
+
+                                <p:column headerText="Peças Vend." sortBy="#{myTest.pecasAtendimento}"
+                                                     filterBy="#{myTest.pecasAtendimento}"  class="colunaVisibilidade"
+                                                     filterStyleClass="headerColunaDataTable"
+                                                     style="width: 12%;text-align: right;font-size: 10px;">
+                                           <h:outputText value="#{myTest.pecasAtendimento}" style="text-align: center; display: block;" />
+                                       </p:column>
+
+                                       <p:column headerText="Peças Atend." sortBy="#{myTest.pecasAtendimento}"
+                                                     filterBy="#{myTest.pecasAtendimento}"  class="colunaVisibilidade"
+                                                     filterStyleClass="headerColunaDataTable"
+                                                     style="width: 12%;text-align: right;font-size: 10px ">
+                                           <h:outputText value="#{myTest.pecasAtendimento}" style="text-align: center; display: block;" >
+                                           </h:outputText>
+                                       </p:column>
+
+                                <p:column headerText="Qtde Troca" sortBy="#{myTest.qtdeTroca}"
+                                                 filterBy="#{myTest.qtdeTroca}"  class="colunaVisibilidade"
+                                                 filterStyleClass="headerColunaDataTable"
+                                                 style="width: 12%;text-align: right;font-size: 10px">
+                                           <h:outputText value="#{myTest.qtdeTroca}" style="text-align: center; display: block;" />
+                                       </p:column>
+
+                                <p:column headerText="Valor Troca" sortBy="#{myTest.valorTroca}"
+                                                     filterBy="#{myTest.valorTroca}" class="colunaVisibilidade"
+                                                     filterStyleClass="headerColunaDataTable"
+                                                     style="width: 12%;text-align: right;font-size: 10px">
+                                                     <h:outputText value="#{myTest.valorTroca}" style="text-align: right; display: block;" >
+                                                        <f:convertNumber groupingUsed="true" minFractionDigits="2" maxFractionDigits="2"/>
+                                                     </h:outputText>
+                                       </p:column>
+
+                                <p:column headerText="Peças Atend." sortBy="#{myTest.pecasAtendimento}"
+                                                     filterBy="#{myTest.pecasAtendimento}" class="colunaVisibilidade"
+                                                     filterStyleClass="headerColunaDataTable"
+                                                     style="width: 12%;text-align: right;font-size: 10px">
+                                                     <h:outputText value="#{myTest.pecasAtendimento}" style="text-align: right; display: block;" >
+                                                        <f:convertNumber groupingUsed="true" minFractionDigits="2" maxFractionDigits="2"/>
+                                                     </h:outputText>
+                                       </p:column>
+
+                                <p:column headerText="Venda Média" sortBy="#{myTest.vendaMedia}"
+                                                     filterBy="#{myTest.vendaMedia}" class="colunaVisibilidade"
+                                                     filterStyleClass="headerColunaDataTable"
+                                                     style="width: 12%;text-align: right;font-size: 10px">
+                                                     <h:outputText value="#{myTest.vendaMedia}" style="text-align: right; display: block;" >
+                                                        <f:convertNumber groupingUsed="true" minFractionDigits="2" maxFractionDigits="2"/>
+                                                     </h:outputText>
+                                       </p:column>
+
+                                <p:column headerText="Preço Médio" sortBy="#{myTest.pecasAtendimento}"
+                                                     filterBy="#{myTest.pecasAtendimento}" class="colunaVisibilidade"
+                                                     filterStyleClass="headerColunaDataTable"
+                                                     style="width: 12%;text-align: right;font-size: 10px">
+                                                     <h:outputText value="#{myTest.pecasAtendimento}" style="text-align: right; display: block;" >
+                                                        <f:convertNumber groupingUsed="true" minFractionDigits="2" maxFractionDigits="2"/>
+                                                     </h:outputText>
+                                       </p:column>
+
+                                <p:column headerText="Bolsas Atend." sortBy="#{myTest.bolsasAtendimento}"
+                                                     filterBy="#{myTest.bolsasAtendimento}" class="colunaVisibilidade"
+                                                     filterStyleClass="headerColunaDataTable"
+                                                     style="width: 12%;text-align: right;font-size: 10px">
+                                                     <h:outputText value="#{myTest.bolsasAtendimento}" style="text-align: right; display: block;" >
+                                                        <f:convertNumber groupingUsed="true" minFractionDigits="2" maxFractionDigits="2"/>
+                                                     </h:outputText>
+                                       </p:column>
+
+                                <p:column headerText="Calçados Atend." sortBy="#{myTest.calcadosAtendimento}"
+                                                     filterBy="#{myTest.calcadosAtendimento}" class="colunaVisibilidade"
+                                                     filterStyleClass="headerColunaDataTable"
+                                                     style="width: 12%;text-align: right;font-size: 10px">
+                                                     <h:outputText value="#{myTest.calcadosAtendimento}" style="text-align: right; display: block;" >
+                                                        <f:convertNumber groupingUsed="true" minFractionDigits="2" maxFractionDigits="2"/>
+                                                     </h:outputText>
+                                       </p:column>
+
+                                <p:column headerText="Outros Atend." sortBy="#{myTest.outrosAtendimento}"
+                                                     filterBy="#{myTest.outrosAtendimento}" class="colunaVisibilidade"
+                                                     filterStyleClass="headerColunaDataTable"
+                                                     style="width: 12%;text-align: right;font-size: 10px">
+                                                     <h:outputText value="#{myTest.outrosAtendimento}" style="text-align: right; display: block;" >
+                                                        <f:convertNumber groupingUsed="true" minFractionDigits="2" maxFractionDigits="2"/>
+                                                     </h:outputText>
+                                       </p:column>
+                                       <p:rowExpansion class="iconTogglerDisplayVisibled">
+
+                                               <p:panelGrid  columns="2" columnClasses="columnDataList2,columnDataList3"  class="table table-striped table-bordered">
+
+                                                   <f:facet name="header">
+                                                       <p:outputLabel value="#{myTest.vendedorApelido}" />
+                                                       <br/>
+                                                       <p:outputLabel value="#{myTest.filial}" styleClass="fonteSubTituloDataTable"/>
+                                                   </f:facet>
+
+                                                   <p:outputLabel value="Valor de Vendas" style="text-align: right; display: block;" />
+                                                   <p:outputLabel value="#{myTest.valorLiquidoVenda}" >
+                                                                    <f:convertNumber groupingUsed="true" minFractionDigits="2" maxFractionDigits="2"/>
+                                                   </p:outputLabel>
+
+                                                   <p:outputLabel value="Valor de Metas" style="text-align: right; display: block;" />
+                                                   <p:outputLabel value="#{myTest.valorMeta}" >
+                                                                    <f:convertNumber groupingUsed="true" minFractionDigits="2" maxFractionDigits="2"/>
+                                                   </p:outputLabel>
+
+                                                   <p:outputLabel value="Peças Vendidas" style="text-align: right; display: block"/>
+                                                   <p:outputLabel value="#{myTest.qtdeLiquida}" />
+
+                                                   <p:outputLabel value="Peças Atendimentos" style="text-align: right; display: block"/>
+                                                   <p:outputLabel value="#{myTest.qtdeLiquida}" />
+
+                                                   <p:outputLabel value="Qtde de trocas" style="text-align: right; display: block"/>
+                                                   <p:outputLabel value="#{myTest.qtdeTroca}"/>
+
+
+                                                   <p:outputLabel value="Valor de Trocas" style="text-align: right; display: block"/>
+                                                   <p:outputLabel value="#{myTest.valorTroca}">
+                                                       <f:convertNumber groupingUsed="true" minFractionDigits="2" maxFractionDigits="2"/>
+                                                   </p:outputLabel>
+
+
+                                                   <p:outputLabel value="Peças por Atendimentos" style="text-align: right; display: block"/>
+                                                   <p:outputLabel value="#{myTest.pecasAtendimento}"/>
+                                                   <p:outputLabel value="Venda Média" style="text-align: right; display: block"/>
+                                                   <p:outputLabel value="#{myTest.vendaMedia}"/>
+                                                   <p:outputLabel value="Preço Médio" style="text-align: right; display: block"/>
+                                                   <p:outputLabel value="#{myTest.vendaMedia}"/>
+                                                   <p:outputLabel value="Bolsas por atendimento" style="text-align: right; display: block"/>
+                                                   <p:outputLabel value="#{myTest.bolsasAtendimento}"/>
+                                                   <p:outputLabel value="Calçados por atendimento" style="text-align: right; display: block"/>
+                                                   <p:outputLabel value="#{myTest.calcadosAtendimento}"/>
+                                                   <p:outputLabel value="Outros por atendimento" style="text-align: right; display: block"/>
+                                                   <p:outputLabel value="#{myTest.outrosAtendimento}"/>
+
+                                               </p:panelGrid>
+
+                                   </p:rowExpansion>
+                               </p:dataTable>
+                            
+                               <b:row  styleClass="show-grid">
+                                   <b:column col-xs="12">
+                                       <h2 class="fontResponsive" style="margin-top: 10px">Gráfico de Percentual de vendas das lojas</h2>
+                                        <p:chart id="myPieChart" type="pie" class="flowChartResponsive" model="#{consolidadorDeVendasMB.graficoPercentualDeVendas}"/>
+                                   </b:column>
+                               </b:row>
+                              
+                            <h3>Reflow</h3>
+                            <p:dataTable id="tb1" var="car" value="#{consolidadorDeVendasMB.myQuery}" rowIndexVar="rowindex" styleClass="table-reflow-desktop">
+                                <p:column headerText="filial" priority="1" >
+                                    <h:outputText value="#{car.filial}" />
+                                </p:column>
+
+                                <p:column headerText="(3)" priority="3">
+                                    <h:outputText value="#{car.vendedorApelido}" />
+                                </p:column>
+
+                                <p:column headerText="(2)" priority="2">
+                                    <h:outputText value="#{car.valorLiquidoVenda}" />
+                                </p:column>
+
+                                <p:column headerText="QtdeLiquida">
+                                    <h:outputText value="#{car.qtdeLiquida}" />
+                                </p:column>
+                                
+                                 <p:column headerText="valorLiquido">
+                                    <h:outputText value="#{car.valorLiquidoVenda}" />
+                                </p:column>
+
+                                <p:column headerText="QtdeLiquida">
+                                    <h:outputText value="#{car.qtdeLiquida}" />
+                                </p:column>
+                                
+                                 <p:column headerText="valorLiquido">
+                                    <h:outputText value="#{car.valorLiquidoVenda}" />
+                                </p:column>
+
+                                <p:column headerText="QtdeLiquida">
+                                    <h:outputText value="#{car.qtdeLiquida}" />
+                                </p:column>
+                            </p:dataTable>
+                            
+                   </b:container> 
+               </b:jumbotron>   
+            </h:form>
+	</ui:define>
+       
+</ui:composition>
+</html>

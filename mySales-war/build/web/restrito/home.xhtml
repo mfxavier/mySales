@@ -1,0 +1,482 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:h="http://java.sun.com/jsf/html"
+          xmlns:ui="http://java.sun.com/jsf/facelets"
+          xmlns:f="http://xmlns.jcp.org/jsf/core"
+          xmlns:b="http://bootsfaces.net/ui"
+          xmlns:p="http://primefaces.org/ui">
+<title>
+   Andarella
+</title>
+<h:head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta http-equiv="X-UA-Conpatible" content="IE=edge" />
+        <h:outputStylesheet library="css" name="bootstrap.min.css"></h:outputStylesheet>
+        <h:outputStylesheet library="css" name="estilo.css"/>
+        <style>
+
+           .search-table{
+                table-layout: auto; 
+                margin:40px auto 0px auto; 
+                //border: none!important;
+             }
+            .search-table, td, th {
+               border-collapse: collapse;
+              //  border: none!important;
+            }
+             .search-table-outter { 
+                overflow-x: scroll; 
+              //  border: none!important;
+            }
+            th{
+               padding:20px 7px; 
+               font-size:15px;
+               background-color: #FFF;
+               color:#444;
+              // border: none!important;
+            }
+            td{
+               padding:5px 10px; 
+               height:35px;
+              // border: none!important;
+            }
+           
+            columnAlignLeft{
+                position: fixed;
+                left: 0px;
+                top: 0px;
+            }
+
+        </style>
+</h:head>
+    
+    
+<h:body>
+    <h:form id="formMain">
+        <header class="container-fluid text-center" style="background: #000">
+          <h3  style="color: #FFF; margin-top: 5px" align="center">ANDARELLA</h3> 
+        </header>
+        
+        <div class="jumbotron text-center">
+            <div class="container">
+                
+                 <p:messages id="messages" autoUpdate="true" closable="true" />
+                   
+                    <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+                        <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                           <p:graphicImage library = "imagens" name="loader_win10.gif" width="40px" height="40px" style="margin-left: 25%;margin-right: 25%;margin-bottom: 10%"/>
+                           <br/>
+                            <h:outputText value="Processando..." style="text-align: center; display: block; font-size: 12px;"/>
+                        </p:dialog> 
+                    
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="wrapper iphone"><p:spacer width="1px"/></div>
+                                
+                                <h4 style="text-align: center; display: block; margin-top: -40px">Lojas</h4>
+                                
+                                <b:panelGrid colSpans="12">
+                                    <p:selectOneButton  value="#{consolidadorDeVendasMB.consolidadorDeVendas.filial}" 
+                                                        required="false" 
+                                                        requiredMessage="LOJA não informada.">
+                                        
+                                        <p:ajax listener="#{consolidadorDeVendasMB.buscarVendasTestes()}" 
+                                                 update="@form"
+                                                 />
+                                        
+                                        
+                                        <f:selectItems value="#{filiaisMB.obterListaDeFiliais()}" 
+                                                       var="filiaisBotoes"  
+                                                       id="idFiliais" 
+                                                       itemLabel="#{filiaisBotoes.siglaFilial}" 
+                                                       itemDescription="#{filiaisBotoes.filialApelido}"
+                                                       itemValue="'#{filiaisBotoes.filial}'"/>
+                                                                                
+                                    </p:selectOneButton>
+                                </b:panelGrid>
+                              </div> <!-- col-->
+                        </div> <!-- row -->      
+                            
+                        <div class="row">
+                            <div class="col-sm-12">
+                                 <h4 style="text-align: center; display: block;">Mês (#{consolidadorDeVendasMB.anoAtualVendas})</h4>
+                                
+                                <b:panelGrid colSpans="12">
+                                    <p:selectOneButton value="#{consolidadorDeVendasMB.consolidadorDeVendas.mesVenda}"
+                                                        required="false" 
+                                                        requiredMessage="MêS de venda não informado.">
+                                        
+                                        <p:ajax 
+                                            listener="#{consolidadorDeVendasMB.buscarVendasTestes()}" 
+                                            update="@form"
+                                            />
+                                         
+                                        <f:selectItem itemLabel="Janeiro" itemValue="1" itemDisabled="#{consolidadorDeVendasMB.coordenaMesExibicao('1')}" />
+                                        <f:selectItem itemLabel="Fevereiro" itemValue="2" itemDisabled="#{consolidadorDeVendasMB.coordenaMesExibicao('2')}"/>
+                                        <f:selectItem itemLabel="Março" itemValue="3" itemDisabled="#{consolidadorDeVendasMB.coordenaMesExibicao('3')}"/>
+                                        <f:selectItem itemLabel="Abril" itemValue="4" itemDisabled="#{consolidadorDeVendasMB.coordenaMesExibicao('4')}"/>
+                                        <f:selectItem itemLabel="Maio" itemValue="5" itemDisabled="#{consolidadorDeVendasMB.coordenaMesExibicao('5')}"/>
+                                        <f:selectItem itemLabel="Junho" itemValue="6" itemDisabled="#{consolidadorDeVendasMB.coordenaMesExibicao('6')}"/>
+                                        <f:selectItem itemLabel="Julho" itemValue="7" itemDisabled="#{consolidadorDeVendasMB.coordenaMesExibicao('7')}"/>
+                                        <f:selectItem itemLabel="Agosto" itemValue="8" itemDisabled="#{consolidadorDeVendasMB.coordenaMesExibicao('8')}"/>
+                                        <f:selectItem itemLabel="Setembro" itemValue="9" itemDisabled="#{consolidadorDeVendasMB.coordenaMesExibicao('9')}"/>
+                                        <f:selectItem itemLabel="Outubro" itemValue="10" itemDisabled="#{consolidadorDeVendasMB.coordenaMesExibicao('10')}"/>
+                                        <f:selectItem itemLabel="Novembro" itemValue="11" itemDisabled="#{consolidadorDeVendasMB.coordenaMesExibicao('11')}"/>
+                                        <f:selectItem itemLabel="Dezembro" itemValue="12" itemDisabled="#{consolidadorDeVendasMB.coordenaMesExibicao('12')}"/>
+                                    </p:selectOneButton>
+                                </b:panelGrid>
+                       </div> <!-- col-->    
+                    </div> <!-- row --> 
+                    
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="wrapper iphone"><p:spacer width="1px"/></div>
+                     <h:outputLabel class="fontResponsive" id="idFilialAtual" style="text-align: center; display: block;" value="#{consolidadorDeVendasMB.filialAtualVendas} - #{consolidadorDeVendasMB.mesAtualVendasPorExtenso} #{consolidadorDeVendasMB.anoAtualVendas}"/>
+                     <h:outputLabel class="fontResponsive" id="idMesAnoAtual" style="text-align: center; display: block;" value="#{consolidadorDeVendasMB.mesAtualVendasPorExtenso} #{consolidadorDeVendasMB.anoAtualVendas}" rendered="false"/>
+                </div><!-- col-->    
+            </div><!-- row --> 
+            
+            
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="search-table-outter">
+                        <p:chart 
+                        id="graficoPercentualVendasDasLojas" 
+                        type="pie" 
+                        model="#{consolidadorDeVendasMB.graficoPercentualDeVendas}"/>
+                    </div>
+                    
+                </div> <!-- column  -->
+
+                <div class="col-sm-6">   
+                    <div class="search-table-outter">
+                        <p:chart 
+                        id="graficoPercentualLinhaProdutoID" 
+                        type="pie" 
+                        model="#{consolidadorDeVendasMB.graficoPercentualDeLinhaProduto}"/>
+                    </div>
+                    
+                </div> <!-- column  -->   
+                        
+            </div>   <!-- row -->
+            
+            
+            <div class="row">
+                <div class="col-sm-12">
+                   <div class="search-table-outter">
+                        <table border="solid" class="ttable table-responsive search-table inner table-striped table-bordered datatable-header" 
+                                cellpadding="2" 
+                                cellspacing="3">
+                             <thead>
+                                 <th>Vendedora</th>
+
+                                     <th>Valor Vendas</th>
+                                     <th>Valor Metas</th>
+                                     <th>Pecas Vend.</th>
+                                     <th>Pecas P/Atend.</th>
+                                     <th>Qtde Trocas</th>
+                                     <th>Valor Trocas</th>
+                                     <th>Pecas Atend.</th>
+                                     <th>Venda Média</th>
+                                     <th>Preço Médio</th>
+                                     <th>Calcados Atend.</th>
+                                     <th>Bolsas Atend.</th>
+                                     <th>Outros Atend.</th>
+
+
+                             </thead>
+                             <tbody>
+                                 <ui:repeat var="dTMovVendedores" value="#{consolidadorDeVendasMB.myQuery}">
+                                     <tr>
+                                         <td style="width: 150px;" class="columnAlignLeft">
+                                             <h:outputText value="#{dTMovVendedores.vendedorApelido}" styleClass="caracterDataTable"/>
+
+                                             </td>
+
+                                            <td>
+                                                <h:outputText value="#{dTMovVendedores.valorLiquidoVenda}" styleClass="valorDataTable" >
+                                                           <f:convertNumber groupingUsed="true" minFractionDigits="2" maxFractionDigits="2"/>
+                                                      </h:outputText>
+                                                </td>
+                                            <td> <h:outputText value="9.999,99" styleClass="valorDataTable" />
+                                                          
+                                            </td>
+                                            <td><h:outputText value="#{dTMovVendedores.qtdeLiquida}" styleClass="qtdeDataTable" /></td>
+                                            <td><h:outputText value="#{dTMovVendedores.pecasAtendimento}" styleClass="qtdeDataTable" /></td>
+                                            <td><h:outputText value="#{dTMovVendedores.qtdeTroca}"  styleClass="qtdeDataTable" /></td>
+                                            <td><h:outputText value="#{dTMovVendedores.valorTroca}" styleClass="valorDataTable" >
+                                                    <f:convertNumber groupingUsed="true" minFractionDigits="2" maxFractionDigits="2"/>
+                                                </h:outputText>
+                                            </td>
+                                            <td><h:outputText value="#{dTMovVendedores.qtde_venda}"  styleClass="qtdeDataTable" >
+                                                   
+                                                </h:outputText>
+                                            </td>
+                                            <td><h:outputText value="#{dTMovVendedores.vendaMedia}" styleClass="valorDataTable" >
+                                                    <f:convertNumber groupingUsed="true" minFractionDigits="2" maxFractionDigits="2"/>
+                                                </h:outputText>
+                                            </td>
+                                            <td> <h:outputText value="#{dTMovVendedores.precoMedio}" styleClass="valorDataTable" >
+                                                        <f:convertNumber groupingUsed="true" minFractionDigits="2" maxFractionDigits="2"/>
+                                                     </h:outputText>
+                                            </td>
+                                            <td><h:outputText value="#{dTMovVendedores.bolsasAtendimento}"  styleClass="valorDataTable">
+                                                <f:convertNumber groupingUsed="true" minFractionDigits="2" maxFractionDigits="2"/>
+                                                </h:outputText>
+                                            </td>
+                                            <td><h:outputText value="#{dTMovVendedores.calcadosAtendimento}"  styleClass="valorDataTable">
+                                                <f:convertNumber groupingUsed="true" minFractionDigits="2" maxFractionDigits="2"/>
+                                                </h:outputText>
+                                            </td>
+                                            <td><h:outputText value="#{dTMovVendedores.outrosAtendimento}"  styleClass="valorDataTable">
+                                                <f:convertNumber groupingUsed="true" minFractionDigits="2" maxFractionDigits="2"/>
+                                                </h:outputText>
+                                            </td>
+
+
+                                     </tr>
+                                  </ui:repeat>
+                             </tbody>
+                         </table>
+                    </div> <!-- search-table-outter -->
+                </div> <!-- column  -->   
+            </div> <!-- row-->
+            <div class="row">
+                <div class="col-sm-12">
+                    <div align="right">
+                        <div class="wrapper iphone"><p:spacer width="1px"/></div>
+                            <b:panelGrid colSpans="9,3" size="xs">
+                                <p:outputLabel value="Meta" />
+                                <p:outputLabel value="120.000" />
+
+                                <p:outputLabel value="Meta Alumulada" />
+                                <p:outputLabel value="60.000" />
+
+                                <p:outputLabel value="% Atingido Meta" />
+                                <p:outputLabel value="69" />
+
+                                <p:outputLabel value="% Particip Loja" />
+                                <p:outputLabel value="12"  />
+
+                                <p:outputLabel value="Previsão Faturamento" />
+                                <p:outputLabel value="85.000" /> 
+
+                            </b:panelGrid>
+                            <p:separator style="width: 100%;"/>
+
+                    </div>
+                </div> <!-- column  -->  
+            </div> <!-- row-->
+            <div class="row">
+                <div class="col-sm-12">
+                     <h4 style="text-align: left; display: block;">Venda Diária</h4> 
+                        <div class="search-table-outter">
+                               
+                            <table border="solid" style="width: 100%" class="ttable table-responsive search-table inner table-striped table-bordered datatable-header" 
+                                     cellpadding="2" 
+                                     cellspacing="3">
+                                 <thead>
+                                     <th style="width:65px">
+
+                                        <p:outputLabel value="Vendas" 
+                                               style="text-align: left; 
+                                                      display: block;
+                                                      margin-left: 0px; 
+                                                      font-style: italic; 
+                                                      font-size: 9px;"/>
+                                         <br/>
+                                         <p:outputLabel value="Vendas Ac." 
+                                               style="text-align: left; 
+                                                      display: block;
+                                                      margin-left: 0px;
+                                                      margin-bottom: -100px;
+                                                      font-style: italic; 
+                                                      font-size: 9px;"/>
+                                     </th>
+
+                                     <ui:repeat var="dtMovDiarias" value="#{consolidadorDeVendasMB.listaMovimentacoesDiarias}">
+                                         <th>
+                                             <p:outputLabel value="#{consolidadorDeVendasMB.diaDaSemana(dtMovDiarias.data)}"
+                                               style="text-align: right; display: block"/>
+
+                                             <p:outputLabel value="#{dtMovDiarias.data}" styleClass="fontResponsive"
+                                                                 style="text-align: right; font-size: 9px; display: block">
+                                                      <f:convertDateTime pattern="dd" />
+                                             </p:outputLabel>
+                                             <br/>
+                                              <p:outputLabel value="#{dtMovDiarias.valorLiquidoVenda}" 
+                                                     style="text-align: right; font-style: italic; font-size: 9px; display: block;" >
+                                                     <f:convertNumber groupingUsed="true" minFractionDigits="2" maxFractionDigits="2"/>
+                                                 </p:outputLabel>
+                                             <br/>
+                                             <p:outputLabel value="#{consolidadorDeVendasMB.obterTotalMovimentacaoDiariaPorLoja(dtMovDiarias.filial, dtMovDiarias.data)}" 
+                                                style="text-align: right; margin-bottom: 10px; font-size: 9px; display: block;" >
+                                                 <f:convertNumber groupingUsed="true" minFractionDigits="2" maxFractionDigits="2"/>
+                                             </p:outputLabel>
+                                         </th>    
+
+
+                                     </ui:repeat>
+                                 </thead>    
+                                 <tbody>
+
+                                 </tbody>
+                             </table>
+                               
+                    </div> <!-- search-table-outter -->
+                </div>  <!-- column  -->      
+            </div> <!-- row-->
+            
+            <div class="row" style="margin-top: 10px">
+                <div class="col-sm-6">
+                    <div class="search-table-outter">
+                        <h4 style="text-align: left; display: block;">Vendedoras e Categorias</h4>
+                            <table border="solid" style="width: 100%" class="ttable table-responsive search-table inner table-striped table-bordered datatable-header" 
+                                   cellpadding="2" 
+                                   cellspacing="3">
+
+                                <tbody>
+                                    <ui:repeat var="dtListaDeVendedores" value="#{consolidadorDeVendasMB.listaDeVendedores}">
+                                        <tr>
+                                            <td><h:outputText value="#{dtListaDeVendedores.vendedorApelido}" styleClass="headerDataTable"/></td>
+                                            <td><h:outputText value="Venda R$" styleClass="headerDataTable"/></td>
+                                            <td><h:outputText value="Qtd" styleClass="headerDataTable"/></td>
+                                            <td><h:outputText value="P.M" styleClass="headerDataTable"/></td>
+                                            <td><h:outputText value="R$ Trocas" styleClass="headerDataTable"/></td>
+                                                <ui:repeat var="dtListaMovDeGrupoDeProdutos" 
+                                                           value="#{consolidadorDeVendasMB.obterListadeVendedoresCategorias(dtListaDeVendedores.filial,dtListaDeVendedores.vendedor)}">
+                                                            <tr>
+                                                                <td>
+                                                                   <h:outputText value="#{dtListaMovDeGrupoDeProdutos.grupo_produto}" 
+                                                                    style="text-align: left; display: block"/>
+                                                                </td>
+                                                                <td>
+                                                                   <h:outputText value="#{dtListaMovDeGrupoDeProdutos.valorLiquidoVenda}" style="text-align: right; display: block;" >
+                                                                        <f:convertNumber groupingUsed="true" minFractionDigits="2" maxFractionDigits="2"/>
+                                                                   </h:outputText>
+                                                                </td>
+                                                                 <td>
+                                                                  <h:outputText value="#{dtListaMovDeGrupoDeProdutos.qtde_venda}" style="text-align: center; display: block;font-size: 9px " >
+                                                                  </h:outputText>
+                                                                </td>
+                                                                <td>
+                                                                    <h:outputText value="#{dtListaMovDeGrupoDeProdutos.precoMedio}" style="text-align: right; display: block;" >
+                                                                        <f:convertNumber groupingUsed="true" minFractionDigits="2" maxFractionDigits="2"/>
+                                                                    </h:outputText>
+                                                                </td>
+                                                                <td>
+                                                                   <h:outputText value="#{dtListaMovDeGrupoDeProdutos.valorTroca}" style="text-align: right; display: block;" >
+                                                                            <f:convertNumber groupingUsed="true" minFractionDigits="2" maxFractionDigits="2"/>
+                                                                   </h:outputText> 
+                                                                </td>
+                                                            </tr>
+                                                </ui:repeat>
+                                        </tr>
+                                        <tr><td colspan="5"/></tr>
+                                    </ui:repeat>
+                                </tbody>
+                            </table>
+                    </div><!-- search-table-outter -->
+                </div> <!-- Coluna (1)-->
+                
+                <div class="col-sm-6">
+                    <div class="search-table-outter">
+                      <h4 style="text-align: left; display: block;">Categorias</h4>
+                        
+                        <table border="solid" style="width: 100%" class="ttable table-responsive search-table inner table-striped table-bordered datatable-header" 
+                                         cellpadding="2" 
+                                         cellspacing="3">
+                                 <thead>
+                                     <th><h:outputText value="Grupo" styleClass="headerDataTableSmall"/></th> 
+                                     <th><h:outputText value="Tamanho" styleClass="headerDataTableSmall"/></th>
+                                     <th><h:outputText value="Venda R$" styleClass="headerDataTableSmall"/></th>    
+                                     <th><h:outputText value="Troca R$" styleClass="headerDataTableSmall"/></th>    
+                                     <th><h:outputText value="Qtd Troca" styleClass="headerDataTableSmall"/></th> 
+                                     <th><h:outputText value="Qtd Venda" styleClass="headerDataTableSmall"/></th> 
+                                     <th><h:outputText value="P.M" styleClass="headerDataTableSmall"/></th>    
+                                     <th><h:outputText value="Estoque" styleClass="headerDataTableSmall"/></th> 
+                                     <th><h:outputText value="Giro" styleClass="headerDataTableSmall"/></th> 
+
+                                 </thead>            
+                                 <tbody>
+                                     <ui:repeat var="dtListaDeCategorias" value="#{consolidadorDeVendasMB.listaDeVendasPorCategorias}">
+                                         <tr>
+                                             <td>
+                                                 <h:outputText value="#{dtListaDeCategorias.grupo_produto}" 
+                                                              styleClass="caracterDataTable">
+                                                 </h:outputText>         
+                                             </td>
+                                             <td>
+                                                 <h:outputText value="#{dtListaDeCategorias.tamanho}" 
+                                                                     styleClass="qtdeDataTable">
+                                                 </h:outputText>        
+                                             </td>
+                                             <td>
+                                                 <p:outputLabel value="#{dtListaDeCategorias.valorLiquidoVenda}" 
+                                                                styleClass="valorDataTable" >
+                                                     <f:convertNumber groupingUsed="true" minFractionDigits="2" maxFractionDigits="2"/>
+                                                 </p:outputLabel>
+                                             </td>
+                                             <td>
+                                                 <p:outputLabel value="#{dtListaDeCategorias.valorTroca}" 
+                                                    styleClass="valorDataTable">
+                                                     <f:convertNumber groupingUsed="true" minFractionDigits="2" maxFractionDigits="2"/>
+                                                 </p:outputLabel>
+                                             </td>
+                                             <td>
+                                                 <p:outputLabel value="#{dtListaDeCategorias.qtdeTroca}" 
+                                                    styleClass="qtdeDataTable">
+                                                 </p:outputLabel>
+                                             </td>
+                                             <td>
+                                                 <p:outputLabel value="#{dtListaDeCategorias.qtde_vendida}" 
+                                                    styleClass="qtdeDataTable" >
+
+                                                 </p:outputLabel>
+                                             </td>
+                                             <td>
+                                                 <p:outputLabel value="#{dtListaDeCategorias.precoMedio}" 
+                                                    styleClass="qtdeDataTable" >
+
+                                                 </p:outputLabel>
+                                             </td>
+                                             <td>
+
+                                                 <p:outputLabel value="#{dtListaDeCategorias.estoque}" 
+                                                    styleClass="qtdeDataTable" >
+
+                                                 </p:outputLabel>
+                                             </td>
+                                             <td>
+                                                 <p:outputLabel value="#{dtListaDeCategorias.giro}" 
+                                                    styleClass="qtdeDataTable">
+
+                                                 </p:outputLabel>
+                                             </td>
+                                         </tr>
+                                     </ui:repeat>
+                                 </tbody>
+                             </table> 
+                        </div><!-- search-table-outter -->
+                        <div class="search-table-outter">
+                            <div class="wrapper iphone"><p:spacer width="1px"/></div>
+                            <p:chart id="graficoGradeMediaID" type="bar" model="#{consolidadorDeVendasMB.graficoGradeMedia}" />      
+                        </div><!-- search-table-outter -->
+                </div> <!-- Coluna (2)-->   
+            </div> <!-- row -->
+            
+       
+            
+        </div>   <!-- container -->
+    </div> <!-- jumbotron -->
+     <footer class="container-fluid text-center">
+          <p>Andarella Comércio de Calçados | CNPJ 27.816.537/0001-80 | Rua Dr.Pereira dos Santos, 32. Tijuca. RJ/Brasil. CEP 20250-450</p>
+     </footer>    
+         
+    </h:form>
+</h:body>
+
+</html>
+
